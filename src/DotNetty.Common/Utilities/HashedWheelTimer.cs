@@ -15,6 +15,7 @@ namespace DotNetty.Common.Utilities
     using DotNetty.Common.Concurrency;
     using DotNetty.Common.Internal;
     using DotNetty.Common.Internal.Logging;
+    using TaskCompletionSource = DotNetty.Common.Concurrency.TaskCompletionSource;
 
     public sealed class HashedWheelTimer : ITimer
     {
@@ -98,7 +99,9 @@ namespace DotNetty.Common.Utilities
                         tickInterval,
                         long.MaxValue / this.wheel.Length));
             }
+
             this.workerThread = new Thread(st => this.worker.Run());
+            this.workerThread.IsBackground = true;
 
             this.maxPendingTimeouts = maxPendingTimeouts;
 
